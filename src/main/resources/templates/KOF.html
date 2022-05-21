@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>拳皇</title>
+	<!--    jquery-->
+	<script src="http://libs.baidu.com/jquery/1.9.1/jquery.js"></script>
+	<!--    semantic ui的css样式-->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+	<link rel="stylesheet" href="../information.css">
+	<link rel="stylesheet" type="text/css" href="../css/king.css">
+</head>
+
+<body>
+	<div id="site">
+		<!--导航未完成-->
+		<div class="ui inverted menu">
+			<div class="item"><h2 class="ui teal header">拳皇</h2></div>
+			<button id="chongkai" class="ui inverted green button" onclick="history.go(0)">重开</button>
+			<button id="exit" class="ui inverted red button">退出</button>
+		</div>
+		<img src="../images/0.gif" alt="" id="mc">
+		<img src="../images/0.gif" alt="" id="mc2">
+	</div>
+</body>
+<script>
+	window.onload=function (){
+		$('#exit').click(function (){
+			window.location.replace("m1index");
+		})
+		var t1 = 0;
+		var t2 = 0;
+		var flag = false;
+		var imgMC = document.getElementById("mc");//创建角色
+		var imgMC2 = document.getElementById("mc2");//创建角色
+		var person = new Game(imgMC);
+		var person2 = new Game2(imgMC2);
+
+		function Game(obj){
+			this.obj = obj;
+			this.time = null;
+			this.left = 0;
+		}
+		function Game2(obj){
+			this.obj = obj;
+			this.time = null;
+			this.left = 1250;
+		}
+		Game.prototype.skill = {
+			"87":function(){
+				this.obj.src ='../images/3.gif'; //w
+			},
+			"65":function(){
+				this.obj.src ='../images/2.gif';       //a
+				this.time = setInterval(function(){
+					this.left -= 5;
+					this.obj.style.left = this.left + "px";
+				}.bind(this),1000/60)
+			},
+			"83":function(){
+				this.obj.src ='../images/0.gif';   //s
+			},
+			"68":function(){
+				this.obj.src = '../images/1.gif';  //d
+				this.time = setInterval(function(){
+					this.left += 5;
+					this.obj.style.left = this.left + "px";
+				}.bind(this),1000/60)
+			},
+			"74":function(){
+				console.log("角色2"+person2.left)
+				console.log("角色1"+person.left)
+				this.obj.src ='../images/4.gif'; //J
+				console.log("两角色距离差:"+Math.abs(person.left-this.left));
+				if(Math.abs(person2.left-this.left) < 150)
+				{
+					this.time = setInterval(function(){
+						person2.obj.src = "../images/5.gif";
+					}.bind(this),1000/60)
+					t2=t2+1;
+				}
+			}
+		}
+		Game.prototype.stop = function(){
+			if(t1 < 5)
+			{
+			clearInterval(this.time);
+			this.obj.src ='../images/0.gif';
+			}else{
+				clearInterval(this.time);
+				this.obj.src ='../images/6.gif';
+			}
+		}
+		Game.prototype.active = function(keycode){
+			if(this.skill[keycode]){
+				this.skill[keycode].call(this);
+			}
+		}
+		Game2.prototype.skill = {
+			"38":function(){
+				this.obj.src ='../images/3.gif'; //w
+			},
+			"39":function(){
+				this.obj.src ='../images/2.gif';       //a
+				this.time = setInterval(function(){
+					this.left += 5;
+					this.obj.style.left = this.left + "px";
+				}.bind(this),1000/60)
+			},
+			"40":function(){
+				this.obj.src ='../images/0.gif';   //s
+			},
+			"37":function(){
+				this.obj.src = '../images/1.gif';  //d
+				this.time = setInterval(function(){
+					this.left -= 5;
+					this.obj.style.left = this.left + "px";
+				}.bind(this),1000/60)
+			},
+			"97":function(){
+				console.log("角色2"+person2.left)
+				console.log("角色1"+person.left)
+				this.obj.src ='../images/4.gif'; //J
+				console.log("两角色距离差:"+Math.abs(person.left-this.left));
+				if(Math.abs(person.left-this.left) < 150)
+				{
+					this.time = setInterval(function(){
+					person.obj.src = "../images/5.gif";
+					}.bind(this),1000/60)
+					t1=t1+1;
+				}
+			}
+		}
+		Game2.prototype.stop = function(){
+			if(t2 < 5)
+			{
+				clearInterval(this.time);
+				this.obj.src ='../images/0.gif';
+			}else{
+				clearInterval(this.time);
+				this.obj.src ='../images/6.gif';
+			}
+		}
+		Game2.prototype.active = function(keycode){
+			if(this.skill[keycode]){
+				this.skill[keycode].call(this);
+			}
+		}
+
+
+		document.onkeydown = key;
+		function key(ev){
+			//上：38 下：40 ->39 <-37
+			console.log(ev.keyCode)
+			//w:87,a:65,s:83,d:68
+			if(t1<5 && t2 < 5)
+			{
+				person.active(ev.keyCode);
+				person2.active(ev.keyCode);
+				this.onkeyup = function(){
+					person.stop();
+					person2.stop();
+					this.onkeydown = key;
+				}
+				this.onkeydown = null;
+			}
+		}
+	}
+</script>
+<!--semantic ui的js样式-->
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+</html>

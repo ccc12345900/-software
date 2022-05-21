@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.software.Dao.videoDao">
+    <select id="findall" resultType="com.example.software.Model.video">
+       select * from videostore
+    </select>
+    <insert id="inserVide" parameterType="com.example.software.Model.video">
+        insert into videostore(title,href,timelong) values (#{title},#{href},#{timelong})
+    </insert>
+    <delete id="removeall">
+        DELETE FROM videostore;
+    </delete>
+</mapper>

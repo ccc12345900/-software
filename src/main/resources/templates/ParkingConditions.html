@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--    jquery-->
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js"></script>
+    <!--    semantic ui的css样式-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../information.css">
+<!--    提示框-->
+    <style type="text/css">
+        #getVerifyCode{cursor: pointer; outline: none;}
+        .alert {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 200px;
+            margin-left: -100px;
+            z-index: 99999;
+            padding: 15px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+        }
+
+        .alert-info {
+            color: #31708f;
+            background-color: #d9edf7;
+            border-color: #bce8f1;
+        }
+
+        .alert-warning {
+            color: #8a6d3b;
+            background-color: #fcf8e3;
+            border-color: #faebcc;
+        }
+
+        .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function() {
+            $("#jiazai").hide();
+            if(document.getElementById("1-de").innerText == "这个车位被别人用了，太可惜了~_~")
+            {
+                $("#c-1").css("border","5px red solid")
+            }else{
+                $("#c-1").css("border","5px #33FF66 solid")
+            }
+            if(document.getElementById("2-de").innerText == "这个车位被别人用了，太可惜了~_~")
+            {
+                $("#c-2").css("border","5px red solid")
+            }else{
+                $("#c-2").css("border","5px #33FF66 solid")
+            }
+            if(document.getElementById("3-de").innerText == "这个车位被别人用了，太可惜了~_~")
+            {
+                $("#c-3").css("border","5px red solid")
+            }else{
+                $("#c-3").css("border","5px #33FF66 solid")
+            }
+            if(document.getElementById("4-de").innerText == "这个车位被别人用了，太可惜了~_~")
+            {
+                $("#c-4").css("border","5px red solid")
+            }else{
+                $("#c-4").css("border","5px #33FF66 solid")
+            }
+            //车位信息
+            $("#1").click(function (){
+                if(document.getElementById("1-de").innerText == "这个车位被别人用了，太可惜了~_~"){
+                    $('#1-m')
+                        .modal('show')
+                    ;
+                }else{
+                    $('#5-m').modal('show')
+                }
+            })
+            $("#2").click(function (){
+                if(document.getElementById("2-de").innerText == "这个车位被别人用了，太可惜了~_~"){
+                    $('#2-m')
+                        .modal('show')
+                    ;
+                }else{
+                    $('#5-m').modal('show')
+                }
+            })
+            $("#3").click(function (){
+                //alert(document.getElementById("1-de").innerText)
+                if(document.getElementById("3-de").innerText == "这个车位被别人用了，太可惜了~_~"){
+
+                    $('#3-m')
+                        .modal('show')
+                    ;
+                }else{
+                    $('#5-m').modal('show')
+                }
+            })
+            $("#4").click(function (){
+                if(document.getElementById("4-de").innerText == "这个车位被别人用了，太可惜了~_~"){
+                    $('#4-m')
+                        .modal('show')
+                    ;
+                }else{
+                    $('#5-m').modal('show')
+                }
+            })
+            //存车服务
+            $("#cun").click(function(){
+                $.ajax({
+                    url:"kongchewei",
+                    dataType:"json",
+                    success:function(resp){
+                        if(resp.kong == "0")
+                        {
+                            $("#jiazai").show().delay(8000).fadeOut();
+                            setTimeout(function (){$('.alert').html('存在空车位，可存车').addClass('alert-success').show().delay(1000).fadeOut()},8000)
+                            setTimeout(function (){
+                                $('#6-m').modal('show')
+                            },9000)
+                        }else{
+                            $("#jiazai").show().delay(8000).fadeOut();
+                            setTimeout(function () {
+                                $('.alert').html('很可惜没有停车位了,请稍后查看').addClass('alert-success').show().delay(1000).fadeOut()
+                            },8000)
+                        }
+                    }
+                })
+            })
+            $("#que-cun").click(function(){
+                $.ajax({
+                    url:"cunche",
+                    data:{
+                        "username":document.getElementById("username").innerText,
+                       "time":document.getElementById("cun-time").value
+                    },
+                    dataType: "json",
+                    success:function (resp)
+                    {
+                        if(resp.cunche == 1)
+                        {
+                            window.location.replace("information?username="+document.getElementById("username").innerText+"&password="+document.getElementById("password").innerText)
+                        }
+                        if(resp.ting == "请勿重复存车")
+                        {
+                            $('.alert').html('请勿重复存车').addClass('alert-success').show().delay(2000).fadeOut()
+                        }
+                    }
+                })
+            })
+            $("#qu").click(function ()
+            {
+                $('#7-m')
+                    .modal('show')
+                ;
+            })
+            $("#que-qu").click(function ()
+            {
+                $.ajax({
+                    url:"quche",
+                    data: {
+                        "username": document.getElementById("username").innerText
+                    },
+                    dataType:"json",
+                    success:function (resp)
+                    {
+                        if(resp.chuku==1)
+                        {
+                            $('.alert').html('预约出库成功').addClass('alert-success').show().delay(2000).fadeOut()
+                            setTimeout(function (){window.location.replace("information?username="+document.getElementById("username").innerText+"&password="+document.getElementById("password").innerText)}
+                                ,2000)
+                        }
+                        if(resp.ting=="您并未停车")
+                        {
+                            $('.alert').html('您并没有车在停车场').addClass('alert-success').show().delay(2000).fadeOut()
+                        }
+                    }
+                })
+            })
+            $("#user-information").click(function (){
+                window.location.replace("userinformation?username="+document.getElementById("username").innerText+"&password="+document.getElementById("password").innerText)
+            })
+        }
+    </script>
+    <!--导航未完成-->
+    <div class="ui inverted menu">
+        <div class="item"><h2 class="ui teal header">信息中心</h2></div>
+        <div id="user-icon" class="item">
+            <img class="ui avatar image" src="../img_1.png">
+            <div class="ui simple dropdown item">
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div id="username" class="item" th:text="${username}">Choice 1</div>
+                    <div id="password" class="item" th:text="${password}">Choice 1</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</head>
+<body background="../1.jpg">
+<div class="alert"></div>
+<div id="jiazai" class="ui active inverted dimmer">
+    <div class="ui large text loader">正在寻找空车位，请耐心等待。。。</div>
+</div>
+<div class="ui cards">
+    <div id="c-1" class="card my-card">
+        <div class="content">
+            <div class="header">1号车位</div>
+            <div id="1-de" class="description" th:text="${A1}">使用中。。。</div>
+        </div>
+        <div id="1" class="ui bottom attached button"><i class="add icon"></i>详细信息 </div>
+    </div>
+    <div id="c-2" class="card my-card">
+        <div class="content">
+            <div class="header">2号车位</div>
+            <div id="2-de" class="description" th:text="${A2}">使用中。。。</div>
+        </div>
+        <div id="2" class="ui bottom attached button"><i class="add icon"></i>详细信息 </div>
+    </div>
+    <div id="c-3" class="card my-card">
+        <div class="content">
+            <div class="header">3号车位</div>
+            <div id="3-de" class="description" th:text="${A3}">使用中。。。</div>
+        </div>
+        <div id="3" class="ui bottom attached button"><i class="add icon"></i>详细信息 </div>
+    </div>
+    <div id="c-4" class="card my-card">
+        <div class="content">
+            <div class="header">4号车位</div>
+            <div id="4-de" class="description" th:text="${A4}">使用中。。。</div>
+        </div>
+        <div id="4" class="ui bottom attached button"><i class="add icon"></i>详细信息 </div>
+    </div>
+</div>
+<div id="user-car">
+    <button id="cun"  class="positive ui button">预约存车</button>
+    <button id="qu" class="negative ui button">预约取车</button>
+</div>
+<!--弹出层部分-->
+<div id="1-m" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        1号车位停车信息
+    </div>
+    <div class="image content">
+        <div class="ui medium image">
+            <img src="../1号车.png">
+        </div>
+        <div class="description">
+            <div class="ui header">停车位占用信息</div>
+            <p th:text="${C1}">车位使用时间：0分钟</p>
+            <p th:text="${B1}">车辆车牌号:</p>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui positive right labeled icon button">
+            好的，了解
+            <i class="checkmark icon"></i>
+        </div>
+    </div>
+</div>
+<div id="2-m" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        2号车位停车信息
+    </div>
+    <div class="image content">
+        <div class="ui medium image">
+            <img src="../2号车.png">
+        </div>
+        <div class="description">
+            <div class="ui header">停车位占用信息</div>
+            <p th:text="${C2}">车位使用时间：0分钟</p>
+            <p th:text="${B2}">车辆车牌号:</p>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui positive right labeled icon button">
+            好的，了解
+            <i class="checkmark icon"></i>
+        </div>
+    </div>
+</div>
+<div id="3-m" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        2号车位停车信息
+    </div>
+    <div class="image content">
+        <div class="ui medium image">
+            <img src="../3号车.png">
+        </div>
+        <div class="description">
+            <div class="ui header">停车位占用信息</div>
+            <p th:text="${C3}">车位使用时间：0分钟</p>
+            <p th:text="${B3}">车辆车牌号:</p>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui positive right labeled icon button">
+            好的，了解
+            <i class="checkmark icon"></i>
+        </div>
+    </div>
+</div>
+<div id="4-m" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        2号车位停车信息
+    </div>
+    <div class="image content">
+        <div class="ui medium image">
+            <img src="../4号车.png">
+        </div>
+        <div class="description">
+            <div class="ui header">停车位占用信息</div>
+            <p th:text="${C4}">车位使用时间：0分钟</p>
+            <p th:text="${B4}">车辆车牌号:</p>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui positive right labeled icon button">
+            好的，了解
+            <i class="checkmark icon"></i>
+        </div>
+    </div>
+</div>
+<!--空车位-->
+<div id="5-m" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        该车位还没有被占用
+    </div>
+    <div class="description">
+        <p>该车位可以使用哦！^_^!!!</p>
+    </div>
+    <div class="actions">
+        <div class="ui positive right labeled icon button">
+            好的，了解
+            <i class="checkmark icon"></i>
+        </div>
+    </div>
+</div>
+<!--存车-->
+<div id="6-m" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        确认存车信息
+    </div>
+    <p>存车时间</p>
+    <input id="cun-time" type="time">
+    <div class="actions">
+        <div id="que-cun" class="ui positive right labeled icon button">
+            确认存车
+            <i class="checkmark icon"></i>
+        </div>
+        <div class="ui black deny button">
+            放弃存车
+        </div>
+    </div>
+</div>
+<!--取车-->
+<div id="7-m" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        确认取车信息
+    </div>
+    <p>存车时间</p>
+    <input id="qu-time" type="time">
+    <div class="actions">
+        <div id="que-qu" class="ui positive right labeled icon button">
+            确认取车
+            <i class="checkmark icon"></i>
+        </div>
+        <div class="ui black deny button">
+            放弃取车
+        </div>
+    </div>
+</div>
+<br>
+<div class="ui three buttons three-buttons">
+    <button class="ui active button">车位信息</button>
+    <button id="user-information" class="ui button">用户信息</button>
+    <button class="ui button">设置</button>
+</div>
+</body>
+<!--semantic ui的js样式-->
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+</html>

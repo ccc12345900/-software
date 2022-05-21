@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.software.Dao.ItemDao">
+    <select id="findBooks" parameterType="java.lang.String" resultType="com.example.software.Model.book">
+       select * from bookstore where title = #{title}
+    </select>
+    <select id="findBook" parameterType="java.lang.String" resultType="com.example.software.Model.book">
+        select * from bookstore where title = #{title} LIMIT 1
+    </select>
+    <insert id="insertBook" parameterType="com.example.software.Model.book">
+        insert into bookstore(title,content,path) values (#{title},#{content},#{path})
+    </insert>
+</mapper>
